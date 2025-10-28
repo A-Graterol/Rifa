@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verificar mis Tickets</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      margin-top: 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .ticket-card {
+      background-color: #f0f9ff;
+      border-left: 4px solid #0d6efd;
+      padding: 1.2rem;
+      margin-top: 1.5rem;
+      border-radius: 8px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2>Verificar mis Tickets</h2>
+      <p class="text-muted">Ingresa tu cédula para ver tus tickets</p>
+    </div>
+
+    <!-- Formulario de verificación -->
+    <form id="verificar-form">
+      <div class="mb-3">
+        <label for="cedula-verificar" class="form-label">Cédula</label>
+        <input type="text" class="form-control" id="cedula-verificar" placeholder="12345678" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Buscar Tickets</button>
+      </div>
+    </form>
+
+    <!-- Resultado: No encontrado -->
+    <div id="no-encontrado" class="alert alert-warning mt-4 hidden" role="alert">
+      No se encontraron tickets asociados a esta cédula.
+    </div>
+
+    <!-- Resultado: Ticket encontrado -->
+    <div id="ticket-info" class="ticket-card hidden">
+      <h5 class="mb-3">✅ Compra Verificada</h5>
+      <p><strong>Nombre:</strong> <span id="v-nombre"></span></p>
+      <p><strong>Cédula:</strong> <span id="v-cedula"></span></p>
+      <p><strong>Tickets comprados:</strong> <span id="v-cantidad"></span></p>
+      <p><strong>Código de compra:</strong> <span id="v-codigo" class="badge bg-primary"></span></p>
+      <p><strong>Fecha:</strong> <span id="v-fecha"></span></p>
+      <p><strong>Método de pago:</strong> <span id="v-metodo"></span></p>
+      <p><strong>Monto:</strong> <span id="v-monto"></span></p>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="index.html" class="btn btn-outline-secondary">← Volver al Inicio</a>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // === Generar o recuperar código único ===
+    function generarCodigoUnico() {
+      return 'RIFA-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    }
+
+    // === Guardar datos de compra con código único (si no existe) ===
+    if (localStorage.getItem('rifa_compra_exitosa') === 'true') {
+      const codigo = localStorage.getItem('rifa_codigo_compra') || generarCodigoUnico();
+      localStorage.setItem('rifa_codigo_compra', codigo);
+      localStorage.setItem('rifa_fecha_compra', new Date().toLocaleString('es-VE'));
+    }
+
+    // === Verificar al enviar el formulario ===
+    document.getElementById('verificar-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const cedulaInput = document.getElementById('cedula-verificar').value.trim();
+      const cedulaGuardada = localStorage.getItem('rifa_cedula');
+
+      const noEncontrado = document.getElementById('no-encontrado');
+      const ticketInfo = document.getElementById('ticket-info');
+
+      // Ocultar ambos
+      noEncontrado.classList.add('hidden');
+      ticketInfo.classList.add('hidden');
+
+      if (cedulaInput === cedulaGuardada && localStorage.getItem('rifa_compra_exitosa') === 'true') {
+        // Mostrar datos
+        document.getElementById('v-nombre').textContent = localStorage.getItem('rifa_nombre') || '—';
+        document.getElementById('v-cedula').textContent = cedulaGuardada;
+        document.getElementById('v-cantidad').textContent = localStorage.getItem('rifa_qty') || '1';
+        document.getElementById('v-codigo').textContent = localStorage.getItem('rifa_codigo_compra') || '—';
+        document.getElementById('v-fecha').textContent = localStorage.getItem('rifa_fecha_compra') || '—';
+
+        // Método legible
+        const metodo = localStorage.getItem('rifa_metodo_pago');
+        const metodos = {
+          mercantil: 'Pago Móvil Mercantil',
+          zelle: 'Zelle',
+          binance: 'Binance'
+        };
+        document.getElementById('v-metodo').textContent = metodos[metodo] || metodo || '—';
+
+        // Monto
+        const totalBs = parseFloat(localStorage.getItem('rifa_total_bs')) || 0;
+        document.getElementById('v-monto').textContent = 
+          totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2 }) + ' Bs.';
+
+        ticketInfo.classList.remove('hidden');
+      } else {
+        noEncontrado.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
