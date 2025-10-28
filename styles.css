@@ -63,7 +63,7 @@ img {
 }
 
 .hero .logo {
-  max-height: 60px;
+  max-height: auto;
   margin-bottom: 1.2rem;
   border-radius: 8px;
 }
