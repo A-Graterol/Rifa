@@ -4,17 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rifa - Participa y Gana</title>
-  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
-  
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Hero Section -->
   <div class="hero text-center">
     <div class="container">
-      <!-- LOGO (reemplaza src por tu imagen) -->
       <img src="logo.png" alt="Logo de la Rifa" class="logo" id="logo">
       <h1 class="display-5 fw-bold">¡Participa y Gana!</h1>
       <p class="lead">Mega Combo Hogar + $15.000 en efectivo</p>
@@ -22,40 +18,35 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="container mt-4">
     <div class="ticket-card">
-      <!-- Precio dinámico -->
       <div class="text-center mb-3">
-        <h3 id="price-display">Cargando precio...</h3>
+        <h3 id="price-display" class="price-display">Cargando precio...</h3>
         <small class="text-muted">Precio por ticket (en Bs, según tasa BCV)</small>
       </div>
 
-      <!-- Barra de progreso -->
-      <div class="text-center mb-3">
+      <div class="progress-wrapper text-center mb-3">
         <div class="progress">
-          <div class="progress-bar bg-success" role="progressbar" id="progress-bar" style="width: 0%">0%</div>
+          <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 0%">0%</div>
         </div>
         <small class="text-muted" id="availability">100 números disponibles</small>
       </div>
 
-      <!-- Selección de cantidad -->
       <div class="text-center mb-4">
         <p><strong>¿Cuántos tickets quieres?</strong></p>
         <div>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="1">1</button>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="2">2</button>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="5">5</button>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="10">10</button>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="25">25</button>
-          <button class="btn btn-outline-primary btn-ticket" data-qty="50">50</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="1">1</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="2">2</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="5">5</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="10">10</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="25">25</button>
+          <button class="btn btn-ticket btn-outline-primary" data-qty="50">50</button>
         </div>
         <input type="hidden" id="selected-qty" value="1">
       </div>
 
-      <!-- Botones de acción -->
       <div class="d-grid gap-2">
-        <button id="btn-comprar" class="btn btn-success btn-lg">Comprar Tickets</button>
+        <button id="btn-comprar" class="btn btn-success-lg">Comprar Tickets</button>
         <button id="btn-verificar" class="btn btn-outline-secondary">Verificar mis Tickets</button>
       </div>
 
@@ -65,87 +56,9 @@
     </div>
   </div>
 
-  <!-- Modal: Términos y Condiciones -->
-  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="termsModalLabel">Términos y Condiciones</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <ol>
-            <li>La rifa consta de 100 números únicos.</li>
-            <li>El sorteo se realizará el 15 de noviembre de 2025.</li>
-            <li>El premio es un Mega Combo Hogar + $15.000 en efectivo.</li>
-            <li>Los ganadores serán notificados vía WhatsApp y correo.</li>
-            <li>No hay devoluciones después de la compra.</li>
-            <li>El organizador se reserva el derecho de modificar fechas por causas de fuerza mayor.</li>
-            <li>Los comprobantes de pago deben enviarse dentro de los 5 minutos posteriores a la compra.</li>
-            <li>Al participar, aceptas todos los términos aquí descritos.</li>
-          </ol>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bootstrap JS + Popper -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    // === CONFIGURACIÓN EDITABLE ===
-    const USD_PRICE_PER_TICKET = 10; // Precio en dólares por ticket
-    const TASA_BCV = 36.50; // Tasa oficial del BCV (Bs por USD) — ACTUALIZA ESTE VALOR DIARIAMENTE
-    const TOTAL_NUMBERS = 100;
-    const SOLD_NUMBERS = 23; // Simulación: puedes cambiar esto o conectarlo a una API más adelante
-
-    // === Cálculos ===
-    const priceBs = USD_PRICE_PER_TICKET * TASA_BCV;
-    const available = TOTAL_NUMBERS - SOLD_NUMBERS;
-    const percentSold = Math.round((SOLD_NUMBERS / TOTAL_NUMBERS) * 100);
-
-    // === Actualizar UI ===
-    document.getElementById('price-display').textContent = `Bs. ${priceBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('progress-bar').style.width = `${percentSold}%`;
-    document.getElementById('progress-bar').textContent = `${percentSold}%`;
-    document.getElementById('availability').textContent = `${available} números disponibles`;
-
-    // === Selección de cantidad ===
-    document.querySelectorAll('.btn-ticket').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const qty = parseInt(btn.getAttribute('data-qty'));
-        document.getElementById('selected-qty').value = qty;
-        // Resaltar botón seleccionado
-        document.querySelectorAll('.btn-ticket').forEach(b => b.classList.remove('btn-primary', 'text-white'));
-        btn.classList.add('btn-primary', 'text-white');
-      });
-    });
-
-    // === Redirección a compra ===
-    document.getElementById('btn-comprar').addEventListener('click', () => {
-      const qty = document.getElementById('selected-qty').value;
-      if (qty > available) {
-        alert(`Solo quedan ${available} números disponibles.`);
-        return;
-      }
-      // Guardar en localStorage para usar en la siguiente página
-      localStorage.setItem('rifa_qty', qty);
-      localStorage.setItem('rifa_price_bs', priceBs);
-      localStorage.setItem('rifa_price_usd', USD_PRICE_PER_TICKET);
-      window.location.href = 'paso1.html';
-    });
-
-    document.getElementById('btn-verificar').addEventListener('click', () => {
-      window.location.href = 'verificar.html';
-    });
-
-    // === Logo fallback ===
-    document.getElementById('logo').onerror = () => {
-      document.getElementById('logo').src = 'https://via.placeholder.com/150x60?text=LOGO';
-    };
-  </script>
+  <!-- Tu script principal (con soporte para módulos) -->
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
